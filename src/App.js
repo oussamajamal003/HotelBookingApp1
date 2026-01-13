@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-const userroutes = require("./routes/user-routes");
-// const errorHandler = require("./Middlewares/errorHandler"); 
+const userroutes = require("./routes/authroutes");
+//const errorHandler = require("./Middlewares/errorHandler"); 
 
 const app = express();
 
@@ -13,6 +13,23 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+if (process.env.NODE_ENV === "development") {
+  const swaggerUi = require("swagger-ui-express");
+  const swaggerSpecs = require("./config/swagger");
+  const basicAuth = require("express-basic-auth");
+  const env = require("./config/env");
+
+  app.use(
+    "/api-docs",
+    basicAuth({
+      users: { [env.SWAGGER_USER]: env.SWAGGER_PASSWORD },
+      challenge: true,
+    }),
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpecs)
+  );
+}
 
 app.use("/api/auth", userroutes);
 //app.use("/api/users", userroutes);

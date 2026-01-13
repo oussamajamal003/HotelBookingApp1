@@ -1,5 +1,5 @@
-const app = require("./App");
 const env = require("./config/env");
+const app = require("./App");
 
 class Server {
   constructor() {

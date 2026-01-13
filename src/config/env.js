@@ -10,6 +10,8 @@ const env = {
   DB_NAME: process.env.DB_NAME || "hotelbooking",
   JWT_SECRET: process.env.JWT_SECRET || "hotel_booking_secret_key_2024",
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || "1h",
+  SWAGGER_USER: process.env.SWAGGER_USER || "admin",
+  SWAGGER_PASSWORD: process.env.SWAGGER_PASSWORD || "admin",
 };
 
 module.exports = env;
