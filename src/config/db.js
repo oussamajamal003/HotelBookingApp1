@@ -12,6 +12,7 @@ module.exports = db;*/
 
 const mysql = require("mysql2/promise");
 const env = require("./env");
+const logger = require("../utils/logger");
 
 const pool = mysql.createPool({
   host: env.DB_HOST,
@@ -21,6 +22,22 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
+});
+
+pool.on('connection', (connection) => {
+  logger.debug('New database connection established');
+});
+
+pool.on('acquire', (connection) => {
+  logger.debug('Connection acquired from pool');
+});
+
+pool.on('release', (connection) => {
+  logger.debug('Connection released back to pool');
+});
+
+pool.on('enqueue', () => {
+  logger.warn('Waiting for available connection slot');
 });
 
 module.exports = pool;

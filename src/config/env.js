@@ -12,6 +12,11 @@ const env = {
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || "1h",
   SWAGGER_USER: process.env.SWAGGER_USER || "admin",
   SWAGGER_PASSWORD: process.env.SWAGGER_PASSWORD || "admin",
+  LOG_LEVEL: process.env.LOG_LEVEL || "info",
+  BASE_URL: process.env.BASE_URL || "http://localhost:5000/api/auth",
+  SCENARIO: process.env.SCENARIO || "normal",
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL || "admin@example.com",
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || "admin123",
 };
 
 module.exports = env;

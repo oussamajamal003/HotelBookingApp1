@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const env = require("../config/env");
+const logger = require("../utils/logger");
 
 /**
  * Auth Guard
@@ -11,6 +12,7 @@ const authGuard = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
+      logger.warn(`Auth Failed: No token provided - IP: ${req.ip}`);
       return res.status(401).json({ error: "Unauthorized: No token provided" });
     }
 
@@ -18,6 +20,7 @@ const authGuard = (req, res, next) => {
     const token = authHeader.split(" ")[1];
 
     if (!token) {
+      logger.warn(`Auth Failed: Invalid token format - IP: ${req.ip}`);
       return res.status(401).json({ error: "Unauthorized: Invalid token format" });
     }
 
@@ -27,7 +30,7 @@ const authGuard = (req, res, next) => {
     
     next();
   } catch (error) {
-    console.error("Auth Guard Error:", error.message);
+    logger.error(`Auth Guard Error: ${error.message} - IP: ${req.ip}`);
     if (error.name === "TokenExpiredError") {
       return res.status(401).json({ error: "Unauthorized: Token has expired" });
     }
