@@ -1,4 +1,4 @@
-> I created a src folder to have this structure:
+=> I created a src folder to have this structure:
 
 Server.js: Server startup
 
@@ -65,11 +65,3 @@ auth.logout.test.js : Tests if the system can handle many users logging out at t
 auth.getAllUsers.test.js : Tests how the system responds when many requests ask for the list of all users.
 
 auth.db-load.test.js : Tests how the database handles heavy load when many users send requests at the same time.
-
-for testing i use vscode terminal
-
-for auth.signup.test.js by example i run it in vscode terminal using : k6 run tests/stress/auth.signup.test.js
-
-I can test it in normal scenario or override it to stress scenario
-
-Also I added logs for normal and stress testing , k6 logging and db logging
