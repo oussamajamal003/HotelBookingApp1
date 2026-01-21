@@ -5,7 +5,7 @@ class StudentLog {
   /**
    * Logs a student-related action to the database and file system.
    * Handles errors internally to ensure main flow isn't interrupted.
-   * 
+   *  
    * @param {Object} params
    * @param {number|null} params.studentId - ID of the affected student (nullable for lists)
    * @param {string} params.action - CREATE, UPDATE, DELETE, VIEW, LIST
