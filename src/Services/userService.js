@@ -64,7 +64,7 @@ class UserService {
     );
 
     return {
-      user: { user_id: userId, username, email },
+      user: { user_id: userId, username, email, role },
       token,
     };
   }
