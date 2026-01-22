@@ -41,6 +41,11 @@ class User {
       [createdBy, modifiedBy, userId]
     );
   }
+
+  static async delete(id) {
+    const [result] = await pool.query("DELETE FROM users WHERE user_id = ?", [id]);
+    return result.affectedRows > 0;
+  }
 }
 
 module.exports = User;

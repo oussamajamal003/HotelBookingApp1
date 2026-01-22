@@ -100,9 +100,27 @@ class UserService {
         user_id: user.user_id,
         username: user.username,
         email: user.email,
+        role: user.role,
       },
       token,
     };
+  }
+
+  static async deleteUser(userId, ipAddress) {
+    logger.info(`Attempting to delete user: ${userId}`);
+    // Optional: Check if user exists or is super admin etc.
+    const deleted = await User.delete(userId);
+    if (!deleted) {
+      throw new Error("User not found or could not be deleted");
+    }
+
+    await AuditLog.log({ 
+      userId, 
+      action: 'DELETE_ACCOUNT', 
+      ipAddress 
+    });
+    
+    return true;
   }
 }
 

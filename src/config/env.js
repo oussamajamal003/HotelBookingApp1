@@ -9,7 +9,7 @@ const env = {
   DB_PASSWORD: process.env.DB_PASSWORD || "",
   DB_NAME: process.env.DB_NAME || "studentmanagement",
   JWT_SECRET: process.env.JWT_SECRET || "student_management_secret_key_2024",
-  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || "1h",
+  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || "24h",
   SWAGGER_USER: process.env.SWAGGER_USER || "admin",
   SWAGGER_PASSWORD: process.env.SWAGGER_PASSWORD || "admin",
   LOG_LEVEL: process.env.LOG_LEVEL || "info",

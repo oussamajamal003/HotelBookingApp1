@@ -89,10 +89,25 @@ const logout = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  try {
+    const userId = req.user.user_id; // From authGuard
+    const ipAddress = req.ip || req.connection.remoteAddress;
+
+    await UserService.deleteUser(userId, ipAddress);
+
+    return res.status(200).json({ message: "Account deleted successfully" });
+  } catch (error) {
+    logger.error(`Delete account error: ${error.message}`, { stack: error.stack });
+    return res.status(500).json({ error: "Failed to delete account" });
+  }
+};
+
 module.exports = {
   getUsers,
   signup,
   login,
   logout,
+  deleteUser,
 };
 

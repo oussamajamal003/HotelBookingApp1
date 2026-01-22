@@ -120,4 +120,22 @@ router.post("/login", validateLogin, usersController.login);
  */
 router.post("/logout", authGuard, usersController.logout);
 
+/**
+ * @swagger
+ * /api/auth/delete:
+ *   delete:
+ *     summary: Delete current user account
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Account deleted successfully
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
+router.delete("/delete", authGuard, usersController.deleteUser);
+
 module.exports = router;
