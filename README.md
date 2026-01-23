@@ -1,75 +1,234 @@
-=> I created a src folder to have this structure:
+# 📗 Student Management System — Server
 
-Server.js: Server startup
+![Status](https://img.shields.io/badge/Status-Active-success)
+![Node](https://img.shields.io/badge/Node-v18+-green)
+![Express](https://img.shields.io/badge/Express-5.0-gray)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-blue)
 
-config folder: db.js: Database connection pool
+A robust, secure, and scalable backend API for managing student records, user authentication, and system auditing. Built with Node.js and Express, connected to a MySQL database.
 
-env.js: Environment variables
+---
 
-Controllers folder with users-controllers.js for User authentication handlers
+## 📌 Project Overview
 
-Middlewares folder with authMiddleware.js for JWT token middleware
+This backend server is a RESTful API designed to support the Student Management System. It handles data persistence, authentication validation, business logic execution, and security enforcement.
 
-Models folder with User.js for User database
+**Core Responsibilities:**
+- **Secure API:** Provides endpoints protected by JWT and Role Guards.
+- **Audit Trails:** Tracks critical actions (Create/Update/Delete) for security compliance.
+- **Data Integrity:** Ensures valid data entry via middleware validation layers.
 
-Routes folder with user-routers.js for User APIs routes
+---
 
-Services folder with userService.js for User logic
+## ✨ Features
 
-Test folder with authTest.js for Authentication test
+- **🔐 Authentication & Authorization:**
+  - Standard Email/Password login with bcrypt hashing.
+  - JWT (JSON Web Token) issuance and verification.
+  - Granular `auth.guard` and `role.guard` middleware.
+  - Account deletion support.
 
-Utils folder with responseHandler.js for response functions
+- **📜 Student Management Core:**
+  - CRUD APIs for maintaining student records.
+  - Efficient search and pagination for large datasets.
 
-Validator folder with authValidator.js to have Input validation for authentication
+- **🕵️‍♂️ Audit Logging:**
+  - Automatic logging of sensitive actions (`student_logs`).
+  - Records *who* did *what* and *when*, including IP addresses.
 
-=> I Added Swagger UI for API documentation and testing.
+- **🛡️ Security First:**
+  - Password Hashing (bcrypt).
+  - CORS configuration.
+  - Centralized Error Handling.
+  - Input Validation middleware.
 
-i created guards for authentication and then updated routes,swagger
+---
 
-3 guards created:
+## 🛠 Tech Stack
 
--Auth Guard: checks JWT and allows access only if the user is authenticated.
+| Category | Technology | Description |
+| :--- | :--- | :--- |
+| **Runtime** | ![Node](https://img.shields.io/badge/-Node.js-339933?logo=node.js&logoColor=white) | JavaScript runtime environment |
+| **Framework** | ![Express](https://img.shields.io/badge/-Express-000000?logo=express&logoColor=white) | Web framework for Node.js (v5) |
+| **Database** | ![MySQL](https://img.shields.io/badge/-MySQL-4479A1?logo=mysql&logoColor=white) | Relational database management system |
+| **Driver** | `mysql2` | Fast MySQL driver with Promise support |
+| **Auth** | `jsonwebtoken`, `bcrypt` | Security standards |
+| **Logging** | `winston` | Universal logging library |
+| **Docs** | `swagger-ui-express` | API Documentation interface |
 
--Role Guard: Ensures the authenticated user is an admin (here i added a column role in mysql)
+---
 
--ownershipguard (now not used): Verify an authenticated user is permitted to access something like his profile for example
+## 📁 Project Structure
 
-on api/auth/ and api/auth/logout routes i implemented a authguard
+```bash
+Server/src/
+├── config/              # Database connection (`db.js`) & Environment config
+├── controllers/         # Request handlers (`student-controllers.js`, `users-controllers.js`)
+├── docs/                # Swagger documentation components
+├── guards/              # Security Middleware (`auth.guard.js`, `role.guard.js`, `ownership.guard.js`)
+├── Middlewares/         # Global middlewares (`authMiddleware.js`)
+├── Models/              # Database models (`Student.js`, `User.js`, `AuditLog.js`)
+├── routes/              # API definitions (`authroutes.js`, `studentRoutes.js`)
+├── scripts/             # Utility scripts, if any
+├── Services/            # Business Logic (`studentService.js`, `userService.js`)
+├── utils/               # Helpers (`logger.js`, `responseHandler.js`)
+├── validator/           # Input validation rules (`authValidator.js`)
+├── App.js               # Express application setup
+└── Server.js            # Entry point (Port listening)
+```
 
-on api/auth/ route i implemented a roleguard("admin")
+---
 
-Login and signup are public because users are not authenticated
+## ⚙️ Prerequisites
 
-=> I Implemented Winston for logging (info, warn, error)
+- **Node.js**: v18+
+- **MySQL Database**: Running locally or remotely.
+- **Database Tools**: MySQL Workbench or phpMyAdmin (optional).
 
-Integrated Morgan to log and monitore all HTTP requests
+---
 
-For Audits I Added in database in my users table (created_by, modified_by, timestamps) and audit_logs table for security events (login success/failure, signup, admin access).
+## 🚀 Installation & Setup
 
-For stress testing:
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/student-management-app.git
+   cd student-management-app/Server
+   ```
 
-I use k6 and i installed it with: "winget install k6"
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-I also Added testing, logging and swagger configurations in env variables
+3. **Environment Setup:**
+   Create a `.env` file in the root of the `Server` directory:
+   ```env
+   PORT=5000
+   DB_HOST=localhost
+   DB_USER=root
+   DB_PASS=yourpassword
+   DB_NAME=student_db
+   JWT_SECRET=your_super_secret_key
+   JWT_EXPIRES_IN=24h
+   ```
 
-I created tests/stress folder :
+4. **Run the Database Scripts:**
+   Execute the usage SQL scripts (if provided) or allow the models to sync (depending on implementation).
 
-This folder contains 5 stress tests files for authentication and database load.
+5. **Start the Server:**
+   ```bash
+   npm run dev
+   ```
+   > Server running on `http://localhost:5000`
 
-auth.login.test.js: Tests how the system behaves when many users try to log in at the same time.
+---
 
-auth.signup.test.js: Tests the system when many users create new accounts at once.
+## 🗄 Database Schema
 
-auth.logout.test.js : Tests if the system can handle many users logging out at the same time.
+### `users`
+Administrators and authorized personnel.
+- `user_id` (PK), `username`, `email`, `password` (hashed), `role`
+- Audit fields: `created_by`, `modified_by`, `createdAt`, `modified_at`
 
-auth.getAllUsers.test.js : Tests how the system responds when many requests ask for the list of all users.
+### `students`
+The core entity being managed.
+- `id` (PK), `first_name`, `last_name`, `email`
+- `created_at`
 
-auth.db-load.test.js : Tests how the database handles heavy load when many users send requests at the same time.
+### `student_logs` / `audit_logs`
+Audit trail for compliance.
+- `student_id`, `action`, `performed_by`
+- `old_data`, `new_data`, `ip_address`, `user_agent`
 
-for testing i use vscode terminal
+---
 
-for auth.signup.test.js by example i run it in vscode terminal using : k6 run tests/stress/auth.signup.test.js
+## 🔑 Authentication APIs
 
-I can test it in normal scenario or override it to stress scenario
+Base Endpoint: `/api/auth`
 
-Also I added logs for normal and stress testing , k6 logging and db logging
+| Method | Endpoint | Description | Protected | Roles |
+| :--- | :--- | :--- | :---: | :---: |
+| `GET` | `/` | List all registered users | ✅ | Admin |
+| `POST` | `/login` | Authenticate user & receive JWT | ❌ | All |
+| `POST` | `/signup` | Register a new user account | ❌ | All |
+| `POST` | `/logout` | Clear session/cookie | ✅ | User |
+| `DELETE` | `/delete` | Delete current user account | ✅ | User |
+
+---
+
+## 🎓 Student APIs
+
+Base Endpoint: `/api/students`
+*Note: All student routes are protected.*
+
+| Method | Endpoint | Description | Protected | Roles |
+| :--- | :--- | :--- | :---: | :---: |
+| `GET` | `/` | List all students (with search) | ✅ | Admin |
+| `GET` | `/:id` | Get single student details | ✅ | Admin |
+| `POST` | `/` | Create a new student | ✅ | Admin |
+| `PUT` | `/:id` | Update student details | ✅ | Admin |
+| `DELETE` | `/:id` | Remove a student | ✅ | Admin |
+
+---
+
+## 🔒 Security Features
+
+1. **JWT & Guards:** 
+   - Requests to `/api/students` are intercepted by `auth.guard`.
+   - `role.guard("admin")` ensures strict access control for student records.
+2. **Password Security:**
+   - All passwords are salted and hashed using `bcrypt` before storage.
+3. **Paramaterized Queries:**
+   - MySQL2 is used with prepared statements to prevent SQL Injection.
+4. **Audit Logging:**
+   - Critical business actions are stored in `student_logs` and `AuditLog` for permanent record keeping.
+5. **Input Validation:**
+   - `authValidator` ensures request bodies are clean before processing.
+
+---
+
+## 📖 API Documentation
+
+This API is documented using **Swagger**.
+
+1. Start the server (`npm run dev`).
+2. Visit **[http://localhost:5000/api-docs](http://localhost:5000/api-docs)**.
+3. You can execute requests directly from the UI to test endpoints.
+
+---
+
+## 🧪 Testing the API
+
+You can test endpoints using **Postman** or **cURL**:
+
+1. **Login first:**
+   - POST to `/api/auth/login` with JSON body `{ "email": "admin@test.com", "password": "pass" }`.
+   - Copy the `token` from the response.
+
+2. **Authenticated Requests:**
+   - Add a Header: `Authorization: Bearer <your_token>`.
+   - Example: GET `http://localhost:5000/api/students`.
+
+---
+
+## 📊 Logging & Auditing
+
+The system maintains a dual-logging strategy:
+1. **Console/File Logs:** Powered by `winston` (info/error rotation).
+2. **Database Audit:** Critical business actions are stored in `student_logs` for permanent record keeping.
+
+---
+
+## 🚨 Error Handling
+
+The application uses a centralized error handling middleware. 
+- **400:** Bad Request (Validation failure).
+- **401/403:** Auth failure / Forbidden.
+- **500:** Internal Server Error (Database issues, logic crashes).
+Errors are returned in a consistent JSON format: `{ "error": "Description" }`.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
